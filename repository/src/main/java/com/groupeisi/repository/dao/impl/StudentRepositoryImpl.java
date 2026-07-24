@@ -12,6 +12,6 @@ public class StudentRepositoryImpl implements IStudentRepository {
 
     @Override
     public StudentEntity get(String matricule) {
-        return new StudentEntity(matricule, null, null, null);
+        return new StudentEntity(null, null, matricule, null);
     }
 }
