@@ -2,7 +2,9 @@ package com.groupeisi.repository.dao.impl;
 
 import com.groupeisi.repository.dao.IStudentRepository;
 import com.groupeisi.repository.entity.StudentEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class StudentRepositoryImpl implements IStudentRepository {
 
     @Override

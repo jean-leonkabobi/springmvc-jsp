@@ -6,10 +6,15 @@ import com.groupeisi.metier.service.mapper.StudentMapper;
 import com.groupeisi.repository.dao.IStudentRepository;
 import com.groupeisi.repository.dao.impl.StudentRepositoryImpl;
 import com.groupeisi.repository.entity.StudentEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+@Component
 public class StudentServiceImpl implements IStudentService {
 
-    private IStudentRepository studentRepository = new StudentRepositoryImpl();
+    @Autowired
+    private IStudentRepository studentRepository;
 
     @Override
     public Student save(Student student) {

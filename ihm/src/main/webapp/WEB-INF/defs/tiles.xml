@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+
+<tiles-definitions>
+
+    <!-- LAYOUTS -->
+    <definition name="authPage" template="/WEB-INF/views/pages/loginPage.jsp">
+        <put-attribute name="title" value=""/>
+        <put-attribute name="content" value=""/>
+        <put-attribute name="form" value=""/>
+        <put-attribute name="table" value=""/>
+    </definition>
+    <definition name="page" template="/WEB-INF/views/pages/templatePage.jsp">
+        <put-attribute name="title" value=""/>
+        <put-attribute name="content" value=""/>
+    </definition>
+
+    <definition name="login" extends="authPage">
+        <put-attribute name="title" value="Login page" type="string"/>
+        <put-attribute name="content" value="/WEB-INF/views/pages/log.jsp"/>
+    </definition>
+
+</tiles-definitions>
