@@ -1,5 +1,8 @@
 <html>
+<head>
+    <title>webservices</title>
+</head>
 <body>
-<h2>Hello World!</h2>
+    <a href="studentWebService?wsdl">student soap WS</a>
 </body>
 </html>

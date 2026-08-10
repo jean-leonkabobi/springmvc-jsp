@@ -10,15 +10,153 @@
     <packaging>war</packaging>
     <name>webservices Maven Webapp</name>
     <url>http://maven.apache.org</url>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <common.version>1.0-SNAPSHOT</common.version>
+        <metier.version>1.0-SNAPSHOT</metier.version>
+        <spring.version>5.2.22.RELEASE</spring.version>
+        <servletapi.version>4.0.0</servletapi.version>
+        <hamcrest.version>2.2</hamcrest.version>
+        <junit.version>5.9.0</junit.version>
+        <!-- JAX-WS RI 2.3.x = implementation SOAP en javax (et non jakarta) -->
+        <jaxws.version>2.3.5</jaxws.version>
+        <jaxb.version>2.3.1</jaxb.version>
+        <jws.version>1.1</jws.version>
+        <!-- Tomcat 9 (javax) pour le lancement en developpement via cargo -->
+        <cargo.version>1.10.14</cargo.version>
+        <tomcat9.version>9.0.89</tomcat9.version>
+        <tomcat.port>8080</tomcat.port>
+    </properties>
+
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <groupId>com.groupeisi</groupId>
+            <artifactId>common</artifactId>
+            <version>${common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.groupeisi</groupId>
+            <artifactId>metier</artifactId>
+            <version>${metier.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.groupeisi</groupId>
+                    <artifactId>common</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!-- Annotations JWS (javax.jws.WebService / WebMethod / WebParam) -->
+        <dependency>
+            <groupId>javax.jws</groupId>
+            <artifactId>javax.jws-api</artifactId>
+            <version>${jws.version}</version>
+        </dependency>
+
+        <!-- Runtime JAX-WS (javax) : apporte WSServlet, WSServletContextListener et JAXB -->
+        <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-rt</artifactId>
+            <version>${jaxws.version}</version>
+        </dependency>
+
+        <!-- API JAXB (javax) pour le formatage XML des DTO -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>${jaxb.version}</version>
+        </dependency>
+
+        <!-- compile only, deployed container will provide this -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servletapi.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.16</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.16</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>${hamcrest.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
         <finalName>webservices</finalName>
+        <plugins>
+            <!-- ce projet n'a pas de fichier web.xml classique bloquant, on tolere l'absence -->
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.4.0</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+
+            <!-- Lancement en developpement sur un Tomcat 9 (javax) telecharge automatiquement -->
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven3-plugin</artifactId>
+                <version>${cargo.version}</version>
+                <configuration>
+                    <container>
+                        <containerId>tomcat9x</containerId>
+                        <artifactInstaller>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat</artifactId>
+                            <version>${tomcat9.version}</version>
+                        </artifactInstaller>
+                    </container>
+                    <configuration>
+                        <type>standalone</type>
+                        <properties>
+                            <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
+                        </properties>
+                    </configuration>
+                    <deployables>
+                        <deployable>
+                            <groupId>com.groupeisi</groupId>
+                            <artifactId>webservices</artifactId>
+                            <type>war</type>
+                            <properties>
+                                <context>webservices</context>
+                            </properties>
+                        </deployable>
+                    </deployables>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>
