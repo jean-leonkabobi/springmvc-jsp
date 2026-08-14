@@ -10,12 +10,7 @@ import com.groupeisi.webservices.mapper.StudentMapper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebResult;
 import javax.jws.WebService;
-import javax.xml.bind.annotation.XmlElement;
-import java.util.Optional;
 
 @WebService(endpointInterface = "com.groupeisi.webservices.service.StudentWebService", name = "StudentWebService")
 public class StudentWebServiceImpl implements StudentWebService {
@@ -29,18 +24,12 @@ public class StudentWebServiceImpl implements StudentWebService {
     }
 
     @Override
-    @WebMethod(operationName = "getStudent")
-    @WebResult(name = "studentResponse")
-    @XmlElement(required = true)
-    public StudentXmlResponse get(@WebParam(name = "matricule") String matricule) {
+    public StudentXmlResponse get(String matricule) {
         return new StudentXmlResponse(StudentMapper.toStudentXml(studentService.get(matricule)));
     }
 
     @Override
-    @WebMethod(operationName = "saveStudent")
-    @WebResult(name = "studentResponse")
-    @XmlElement(required = true)
-    public StudentXmlResponse save(@WebParam(name = "student") StudentXml studentXml) {
+    public StudentXmlResponse save(StudentXml studentXml) {
         Student student = StudentMapper.toStudent(studentXml);
         return new StudentXmlResponse(StudentMapper.toStudentXml(studentService.save(student)));
     }
